@@ -19,7 +19,7 @@ class GeoDataController extends Controller
     {
         $geoData = GeoData::all();
 
-        return view('index', ['geoData' => $geoData]);
+        return view('geodata', ['geoData' => $geoData]);
     }
 
     public function store(
