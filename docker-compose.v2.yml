@@ -3,7 +3,7 @@ version: '3'
 services:
   php:
     container_name: ${PROJECT_NAME}-php
-    image: ${PROJECT_NAME}/php:${PHP_VERSION}
+    image: laravel-kit/php:${PHP_VERSION}
     volumes:
       - ~/.composer-docker/cache:/var/www/.composer/cache
       - ./:/app
@@ -57,7 +57,7 @@ services:
 
   php-cron:
     container_name: ${PROJECT_NAME}-cron
-    image: ${PROJECT_NAME}-cron/php:${PHP_VERSION}
+    image: laravel-kit-cron/php:${PHP_VERSION}
     volumes:
       - ./:/app
       - ./docker/php/.bashrc:/var/www/.bashrc
@@ -72,7 +72,7 @@ services:
 
   php-worker:
     container_name: ${PROJECT_NAME}-worker
-    image: ${PROJECT_NAME}/php:${PHP_VERSION}
+    image: laravel-kit/php:${PHP_VERSION}
     volumes:
       - ~/.composer-docker/cache:/var/www/.composer/cache
       - ./:/app

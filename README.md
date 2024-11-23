@@ -1,21 +1,22 @@
-# !Измените этот заголовок на название своего проекта
+# laravel-kit
 
 ## Quickstart
 1. [Install docker](https://docs.docker.com/install/)
 2. [Install docker-compose](https://docs.docker.com/compose/install/)
 3. [Install traefik](https://github.com/mediaten/traefik)
 
-## Install
-Copy .env file (update if required)
+## Установка
+Копировать .env файл (обновить, если требуется)
 
-При изменении значения ``PROJECT_NAME`` в ``.env`` требуется изменить имя контейнера php в файле ``docker/nginx/default.conf`` строка 48 ``(fastcgi_pass)``. Наименование должно быть выстроено по формуле ``<PROJECT_NAME>-php``
-
-Полная установка приложения в Docker 
+Установить приложение в Docker
 ```
 make install
+make env
 ```
 
-Для подключения к рабочему окружению 
+## Использование
+
+Для подключения к рабочему окружению
 ```
 make env
 ```
@@ -70,7 +71,7 @@ make yarn-command command="add package:0.1"
 Сборка в dev режиме
 ```
 make yarn-dev
-# or 
+# or
 make yarn-watch
 ```
 
@@ -78,17 +79,3 @@ make yarn-watch
 ```
 make yarn-prod
 ```
-
-## DEMO
-
-`administrator` role account
-```
-Login: admin@example.com
-Password: admin
-```
-
-# О ПАКЕТЕ
-
-## Меню административной панели
-
-Меню редактируется в файле конфигурации: /config/admin-menu.php
