@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\SiteController;
+declare(strict_types=1);
+
+use App\Http\Controllers\GeoDataController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,5 +22,7 @@ Route::domain(env('ADMIN_DOMAIN'))
         require __DIR__ . '/backend.php';
     });
 
-Route::get('/', [SiteController::class, 'index'])->name('/');
+Route::get('/', [GeoDataController::class, 'index'])->name('/');
+Route::post('/store', [GeoDataController::class, 'store'])->name('geodata.store');
+Route::delete('/delete/{id}', [GeoDataController::class, 'delete'])->name('geodata.delete');
 

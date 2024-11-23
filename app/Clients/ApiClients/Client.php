@@ -6,7 +6,6 @@ namespace App\Clients\ApiClients;
 
 use App\Exceptions\ClientException;
 use App\Exceptions\NetworkException;
-use App\Exceptions\RequestException;
 use App\Interfaces\ApiClientInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
@@ -16,17 +15,25 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class Client implements ApiClientInterface
 {
+    /**
+     * @param string $url
+     * @param ClientInterface $client
+     */
     public function __construct(
         private readonly string $url,
         private readonly ClientInterface $client = new GuzzleClient(),
     ) {}
 
     /**
+     * @param string $method
+     * @param array $query
+     * @param array $params
+     *
+     * @return ResponseInterface
      * @throws NetworkException
-     * @throws RequestException
      * @throws ClientException
      */
-    public function sendRequest(string $method, array $query = [], array $params = []): ?ResponseInterface
+    public function sendRequest(string $method, array $query = [], array $params = []): ResponseInterface
     {
         try {
             return $this->client->request(
@@ -48,6 +55,9 @@ class Client implements ApiClientInterface
         }
     }
 
+    /**
+     * @return string
+     */
     public function getUrl(): string
     {
         return $this->url;

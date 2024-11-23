@@ -6,3 +6,20 @@
 .field-required {
     color: red;
 }
+
+body {
+    background-color: rgba(242, 243, 247, 1);
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+
+.content {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+}
+
+.table-container {
+    margin-top: 50px;
+}

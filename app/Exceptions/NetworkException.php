@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Exceptions;
 
 use App\Interfaces\NetworkExceptionInterface;
-use App\Traits\RequestException;
 use App\Traits\RequestForException;
 use Psr\Http\Message\RequestInterface;
 use Throwable;

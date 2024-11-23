@@ -7,7 +7,6 @@ namespace App\Clients;
 use App\Clients\ApiClients\Client;
 use App\Exceptions\ClientException;
 use App\Exceptions\NetworkException;
-use App\Exceptions\RequestException;
 use App\Interfaces\ApiClientInterface;
 
 class YandexGeocoderClient
@@ -30,9 +29,12 @@ class YandexGeocoderClient
     }
 
     /**
-     * @throws NetworkException
-     * @throws RequestException
+     * @param string $geocode
+     * @param array $params
+     *
+     * @return array
      * @throws ClientException
+     * @throws NetworkException
      */
     public function getData(string $geocode, array $params = []): array
     {
@@ -46,14 +48,23 @@ class YandexGeocoderClient
     }
 
     /**
-     * @throws RequestException
-     * @throws NetworkException
+     * @param string $geocode
+     *
+     * @return array|null
      * @throws ClientException
+     * @throws NetworkException
      */
-    public function getPos(string $geocode): string
+    public function getAddressPosition(string $geocode): ?array
     {
+        $position = null;
         $geoData = $this->getData($geocode, ['results' => 1]);
+        $results = $geoData['response']['GeoObjectCollection']['featureMember'];
+        if (count($results) > 0) {
+            $geoObject = $results[0]['GeoObject'];
+            $position['address'] = $geoObject['metaDataProperty']['GeocoderMetaData']['Address']['formatted'];
+            $position['position'] = $geoObject['Point']['pos'];
+        }
 
-        return $geoData['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'];
+        return $position;
     }
 }
