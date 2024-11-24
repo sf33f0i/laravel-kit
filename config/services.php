@@ -34,6 +34,6 @@ return [
     'yandexGeocoder' => [
         'url' => 'https://geocode-maps.yandex.ru/1.x?',
         'format' => 'json',
-        'apikey' => env('YANDEX_GEOCODER_TOKEN'),
+        'apikey' => env('YANDEX_GEOCODER_API_KEY'),
     ],
 ];
