@@ -20,11 +20,6 @@ COPY ./php.ini /usr/local/etc/php/
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
 COPY ./docker-php-entrypoint /usr/local/bin/
 
-USER root
-RUN addgroup -g 1000 app && addgroup www-data app
-RUN adduser -u 1000 -s /bin/sh -D -G app app
-USER www-data
-
 WORKDIR /app
 
 ENTRYPOINT ["docker-php-entrypoint"]
