@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Clients\YandexGeocoderClient;
 use App\Http\Requests\GeoData\StoreGeoDataRequest;
 use App\Models\GeoData;
 use App\UseCases\GeoData\DeleteGeoDataCase;
@@ -25,17 +24,16 @@ class GeoDataController extends Controller
     public function store(
         StoreGeoDataRequest $request,
         StoreGeoDataCase $case,
-        YandexGeocoderClient $client,
     ): RedirectResponse {
         try {
             $requestData = $request->validated();
-            $case->handle($requestData, $client);
+            $case->handle($requestData);
             $message = ['success' => 'Адрес успешно добавлен!'];
         } catch (Throwable $exception) {
             $message = ['danger' => $exception->getMessage()];
         }
 
-        return redirect()->back()->with($message);
+        return redirect()->back()->withInput()->with($message);
     }
 
     public function delete(GeoData $id, DeleteGeoDataCase $case): RedirectResponse

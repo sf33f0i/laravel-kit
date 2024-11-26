@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Collection;
             <div class="form-item form-group">
                 <label for="address" class="form-label">Адрес</label>
                 <input
-                    label="Адрес"
+                    value="{{ old('address') }}"
                     class="form-control"
                     name="address"
                     id="address"
@@ -37,8 +37,7 @@ use Illuminate\Database\Eloquent\Collection;
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Адрес</th>
-                        <th scope="col">Широта</th>
-                        <th scope="col">Долгота</th>
+                        <th scope="col">Координаты</th>
                         <th scope="col"></th>
                     </tr>
                     </thead>
@@ -47,8 +46,7 @@ use Illuminate\Database\Eloquent\Collection;
                         <tr>
                             <th scope="row">{{$address->id}}</th>
                             <td>{{$address->address}}</td>
-                            <td>{{$address->latitude}}</td>
-                            <td>{{$address->longitude}}</td>
+                            <td>{{$address->position}}</td>
                             <td>
                                 <form method="POST" action="{{route('geodata.delete', $address->id)}}"
                                       accept-charset="UTF-8">

@@ -6,6 +6,6 @@ namespace App\Exceptions;
 
 use Exception;
 
-class SaveModelException extends Exception
+class NotFoundAddressException extends Exception
 {
 }

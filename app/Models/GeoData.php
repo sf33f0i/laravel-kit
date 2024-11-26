@@ -15,7 +15,6 @@ class GeoData extends Model
 
     protected $fillable = [
         'address',
-        'latitude',
-        'longitude',
+        'position',
     ];
 }

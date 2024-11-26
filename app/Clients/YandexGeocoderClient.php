@@ -7,25 +7,22 @@ namespace App\Clients;
 use App\Clients\ApiClients\Client;
 use App\Exceptions\ClientException;
 use App\Exceptions\NetworkException;
-use App\Interfaces\ApiClientInterface;
+use App\Interfaces\YandexGeocoderClientInterface;
 
-class YandexGeocoderClient
+class YandexGeocoderClient implements YandexGeocoderClientInterface
 {
-    private readonly ApiClientInterface $client;
-
     /**
      * YandexGeocoder constructor.
      *
-     * @param string $url
      * @param string $apikey
      * @param string $format
+     * @param Client $client
      */
     public function __construct(
-        public string $url,
-        public string $apikey,
-        public string $format,
+        private readonly string $apikey,
+        private readonly string $format,
+        private readonly Client $client,
     ) {
-        $this->client = new Client($this->url);
     }
 
     /**
@@ -38,13 +35,17 @@ class YandexGeocoderClient
      */
     public function getData(string $geocode, array $params = []): array
     {
-        return json_decode(
-            $this->client->sendRequest(
-                'GET',
-                ['apikey' => $this->apikey, 'format' => $this->format, 'geocode' => $geocode, ...$params],
-            )->getBody()->getContents(),
-            true,
-        );
+        $response = $this->client->sendRequest(
+            'GET',
+            [
+                'apikey' => $this->apikey,
+                'format' => $this->format,
+                'geocode' => $geocode,
+                ...$params,
+            ],
+        )->getBody()->getContents();
+
+        return json_decode($response, true);
     }
 
     /**
@@ -59,7 +60,7 @@ class YandexGeocoderClient
         $position = null;
         $geoData = $this->getData($geocode, ['results' => 1]);
         $results = $geoData['response']['GeoObjectCollection']['featureMember'];
-        if (count($results) > 0) {
+        if (!empty($results)) {
             $geoObject = $results[0]['GeoObject'];
             $position['address'] = $geoObject['metaDataProperty']['GeocoderMetaData']['Address']['formatted'];
             $position['position'] = $geoObject['Point']['pos'];
