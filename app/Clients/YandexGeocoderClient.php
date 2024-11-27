@@ -22,8 +22,7 @@ class YandexGeocoderClient implements YandexGeocoderClientInterface
         private readonly string $apikey,
         private readonly string $format,
         private readonly Client $client,
-    ) {
-    }
+    ) {}
 
     /**
      * @param string $geocode

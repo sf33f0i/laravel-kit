@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Eloquent\Collection;
+use App\Helpers\PointHelper;
 
 /**
  * @var Collection $geoData
@@ -46,7 +47,7 @@ use Illuminate\Database\Eloquent\Collection;
                         <tr>
                             <th scope="row">{{$address->id}}</th>
                             <td>{{$address->address}}</td>
-                            <td>{{$address->position}}</td>
+                            <td>{{ PointHelper::geometryToPoint($address->position) }}</td>
                             <td>
                                 <form method="POST" action="{{route('geodata.delete', $address->id)}}"
                                       accept-charset="UTF-8">

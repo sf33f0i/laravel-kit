@@ -25,8 +25,8 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table(self::TABLE, function (Blueprint $table) {
-            $table->decimal('latitude', total: 8, places: 6);
-            $table->decimal('longitude', total: 9, places: 6);
+            $table->decimal('latitude', total: 8, places: 6)->nullable();
+            $table->decimal('longitude', total: 9, places: 6)->nullable();
         });
     }
 };

@@ -7,21 +7,25 @@ namespace App\Clients\ApiClients;
 use App\Exceptions\ClientException;
 use App\Exceptions\NetworkException;
 use App\Interfaces\ApiClientInterface;
+use App\Loggers\NullLogger;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Client as GuzzleClient;
+use Psr\Log\LoggerInterface;
 
 class Client implements ApiClientInterface
 {
     /**
      * @param string $url
      * @param ClientInterface $client
+     * @param LoggerInterface $logger
      */
     public function __construct(
         private readonly string $url,
         private readonly ClientInterface $client = new GuzzleClient(),
+        private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 
     /**
@@ -45,12 +49,14 @@ class Client implements ApiClientInterface
                 ],
             );
         } catch (ConnectException $exception) {
+            $this->logger->error($exception);
             throw new NetworkException($exception->getRequest(), 'Нет соединения с ' . $this->getUrl(), $exception);
-        } catch (GuzzleException $e) {
+        } catch (GuzzleException $exception) {
+            $this->logger->error($exception);
             throw new ClientException(
                 'Что то пошло не так при отправке запроса: ' . $this->getUrl(),
                 0,
-                $e
+                $exception
             );
         }
     }

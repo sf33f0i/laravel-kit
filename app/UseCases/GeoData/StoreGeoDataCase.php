@@ -8,6 +8,7 @@ use App\Clients\YandexGeocoderClient;
 use App\Exceptions\ClientException;
 use App\Exceptions\NetworkException;
 use App\Exceptions\NotFoundAddressException;
+use App\Interfaces\YandexGeocoderClientInterface;
 use App\Models\GeoData;
 
 class StoreGeoDataCase
@@ -16,11 +17,11 @@ class StoreGeoDataCase
      * @param YandexGeocoderClient $client
      */
     public function __construct(
-        private readonly YandexGeocoderClient $client,
+        private readonly YandexGeocoderClientInterface $client,
     ) {}
 
     /**
-     * @param array|null $params
+     * @param array $params
      *
      * @throws ClientException
      * @throws NetworkException
