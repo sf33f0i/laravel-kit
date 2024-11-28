@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\UseCases\GeoData;
+namespace App\UseCases\Address;
 
 use App\Clients\YandexGeocoderClient;
 use App\Exceptions\ClientException;
 use App\Exceptions\NetworkException;
 use App\Exceptions\NotFoundAddressException;
 use App\Interfaces\YandexGeocoderClientInterface;
-use App\Models\GeoData;
+use App\Models\Address;
 
-class StoreGeoDataCase
+class StoreAddressCase
 {
     /**
      * @param YandexGeocoderClient $client
@@ -21,20 +21,20 @@ class StoreGeoDataCase
     ) {}
 
     /**
-     * @param array $params
+     * @param string $address
      *
      * @throws ClientException
      * @throws NetworkException
      * @throws NotFoundAddressException
      */
-    public function handle(array $params): void
+    public function handle(string $address): void
     {
-        $addressPosition = $this->client->getAddressPosition($params['address']);
+        $addressPosition = $this->client->getAddressPosition($address);
         if ($addressPosition === null) {
             throw new NotFoundAddressException('Координаты данного адреса не найдены!');
         }
 
-        GeoData::query()->create([
+        Address::query()->create([
             'address' => $addressPosition['address'],
             'position' => "POINT($addressPosition[position])",
         ]);

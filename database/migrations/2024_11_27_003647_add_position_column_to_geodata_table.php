@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    private const string TABLE = 'geodata';
+    private const string TABLE_NAME = 'geodata';
+    private const string COLUMN = 'position';
 
     /**
      * Run the migrations.
@@ -16,8 +17,8 @@ return new class extends Migration {
     public function up(): void
     {
         DB::statement('CREATE EXTENSION postgis');
-        Schema::table(self::TABLE, function (Blueprint $table) {
-            $table->point('position')->nullable();
+        Schema::table(self::TABLE_NAME, static function (Blueprint $table): void {
+            $table->point(self::COLUMN)->nullable();
         });
     }
 
@@ -26,8 +27,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table(self::TABLE, function (Blueprint $table) {
-            $table->dropColumn('position');
+        Schema::table(self::TABLE_NAME, static function (Blueprint $table): void {
+            $table->dropColumn(self::COLUMN);
         });
         DB::statement('DROP EXTENSION postgis');
     }

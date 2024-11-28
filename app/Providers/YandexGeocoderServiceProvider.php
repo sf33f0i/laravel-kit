@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use App\Clients\ApiClients\Client;
 use App\Clients\YandexGeocoderClient;
 use App\Interfaces\YandexGeocoderClientInterface;
+use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
+use Psr\Log\NullLogger;
 
 class YandexGeocoderServiceProvider extends ServiceProvider
 {
@@ -16,10 +17,10 @@ class YandexGeocoderServiceProvider extends ServiceProvider
     {
         $this->app->singleton(YandexGeocoderClientInterface::class, static function (): YandexGeocoderClient {
             $config = config('services.yandexGeocoder');
-            $config['client'] = new Client($config['url']);
-            unset($config['url']);
+            $client = new Client();
+            $logger = new NullLogger();
 
-            return new YandexGeocoderClient(...$config);
+            return new YandexGeocoderClient($config['apikey'], $config['format'], $config['url'], $client, $logger);
         });
     }
 

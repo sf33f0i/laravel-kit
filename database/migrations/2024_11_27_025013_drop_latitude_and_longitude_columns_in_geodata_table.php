@@ -14,7 +14,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table(self::TABLE, function (Blueprint $table) {
+        Schema::table(self::TABLE, static function (Blueprint $table): void {
             $table->dropColumn(['latitude', 'longitude']);
         });
     }
@@ -24,7 +24,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table(self::TABLE, function (Blueprint $table) {
+        Schema::table(self::TABLE, static function (Blueprint $table): void {
             $table->decimal('latitude', total: 8, places: 6)->nullable();
             $table->decimal('longitude', total: 9, places: 6)->nullable();
         });

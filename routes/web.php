@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\GeoDataController;
+use App\Http\Controllers\AddressController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,7 +22,7 @@ Route::domain(env('ADMIN_DOMAIN'))
         require __DIR__ . '/backend.php';
     });
 
-Route::get('/', [GeoDataController::class, 'index'])->name('/');
-Route::post('/store', [GeoDataController::class, 'store'])->name('geodata.store');
-Route::delete('/delete/{id}', [GeoDataController::class, 'delete'])->name('geodata.delete');
+Route::get('/', [AddressController::class, 'index'])->name('/');
+Route::post('/store', [AddressController::class, 'store'])->name('address.store');
+Route::delete('/delete/{id}', [AddressController::class, 'delete'])->name('address.delete');
 

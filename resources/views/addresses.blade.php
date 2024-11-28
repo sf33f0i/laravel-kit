@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Helpers\PointHelper;
 
 /**
- * @var Collection $geoData
+ * @var Collection $addresses
  */
 ?>
 @extends('layouts.main')
@@ -15,7 +15,7 @@ use App\Helpers\PointHelper;
 
 @section('content')
     <div class="content col-10">
-        <form action="{{route('geodata.store')}}" method="POST">
+        <form action="{{route('address.store')}}" method="POST">
             @csrf
             <div class="form-item form-group">
                 <label for="address" class="form-label">Адрес</label>
@@ -31,7 +31,7 @@ use App\Helpers\PointHelper;
                 Отправить
             </button>
         </form>
-        @if($geoData->count() !== 0)
+        @if($addresses->count() !== 0)
             <div class="table-container">
                 <table class="table">
                     <thead>
@@ -43,13 +43,13 @@ use App\Helpers\PointHelper;
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($geoData as $address)
+                    @foreach($addresses as $address)
                         <tr>
                             <th scope="row">{{$address->id}}</th>
                             <td>{{$address->address}}</td>
                             <td>{{ PointHelper::geometryToPoint($address->position) }}</td>
                             <td>
-                                <form method="POST" action="{{route('geodata.delete', $address->id)}}"
+                                <form method="POST" action="{{route('address.delete', $address->id)}}"
                                       accept-charset="UTF-8">
                                     @method('DELETE')
                                     @csrf

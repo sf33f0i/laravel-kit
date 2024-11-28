@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\UseCases\GeoData;
+namespace App\UseCases\Address;
 
 use App\Exceptions\DeleteModelException;
-use App\Models\GeoData;
+use App\Models\Address;
 
-class DeleteGeoDataCase
+class DeleteAddressCase
 {
     /**
-     * @param GeoData $geoData
+     * @param Address $geoData
      *
      * @throws DeleteModelException
      */
-    public function handle(GeoData $geoData): void
+    public function handle(Address $geoData): void
     {
         $delete = $geoData->delete();
 

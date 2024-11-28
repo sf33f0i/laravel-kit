@@ -4,39 +4,37 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\GeoData\StoreGeoDataRequest;
-use App\Models\GeoData;
-use App\UseCases\GeoData\DeleteGeoDataCase;
-use App\UseCases\GeoData\StoreGeoDataCase;
+use App\Http\Requests\Address\StoreAddressRequest;
+use App\Models\Address;
+use App\UseCases\Address\StoreAddressCase;
+use App\UseCases\Address\DeleteAddressCase;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Throwable;
 
-class GeoDataController extends Controller
+class AddressController extends Controller
 {
     public function index(): View
     {
-        $geoData = GeoData::all();
+        $addresses = Address::all();
 
-        return view('geodata', ['geoData' => $geoData]);
+        return view('addresses', ['addresses' => $addresses]);
     }
 
-    public function store(
-        StoreGeoDataRequest $request,
-        StoreGeoDataCase $case,
-    ): RedirectResponse {
+    public function store(StoreAddressRequest $request, StoreAddressCase $case): RedirectResponse
+    {
         try {
             $requestData = $request->validated();
-            $case->handle($requestData);
+            $case->handle($requestData['address']);
             $message = ['success' => 'Адрес успешно добавлен!'];
-        } catch (Throwable $exception) {
-            $message = ['danger' => $exception->getMessage()];
+        } catch (Throwable) {
+            $message = ['danger' => 'Произошла ошибка при добавлении адреса!'];
         }
 
         return redirect()->back()->withInput()->with($message);
     }
 
-    public function delete(GeoData $id, DeleteGeoDataCase $case): RedirectResponse
+    public function delete(Address $id, DeleteAddressCase $case): RedirectResponse
     {
         try {
             $case->handle($id);
