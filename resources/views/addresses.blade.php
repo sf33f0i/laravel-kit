@@ -47,7 +47,7 @@ use App\Helpers\PointHelper;
                         <tr>
                             <th scope="row">{{$address->id}}</th>
                             <td>{{$address->address}}</td>
-                            <td>{{ PointHelper::geometryToPoint($address->position) }}</td>
+                            <td>{{ $address->geometryToPoint($address->position) }}</td>
                             <td>
                                 <form method="POST" action="{{route('address.delete', $address->id)}}"
                                       accept-charset="UTF-8">

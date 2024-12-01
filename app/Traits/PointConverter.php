@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Helpers;
+namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
 
-class PointHelper
+trait PointConverter
 {
-    public static function geometryToPoint(?string $position)
+    public function geometryToPoint(?string $position): ?string
     {
         if (empty($position)) {
             return null;
