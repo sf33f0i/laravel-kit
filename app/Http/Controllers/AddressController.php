@@ -16,7 +16,7 @@ class AddressController extends Controller
 {
     public function index(): View
     {
-        $addresses = Address::all();
+        $addresses = Address::query()->selectRaw("*, ST_AsText(position) as point")->get();
 
         return view('addresses', ['addresses' => $addresses]);
     }

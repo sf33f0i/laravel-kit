@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Helpers\PointHelper;
 
 /**
  * @var Collection $addresses
@@ -15,7 +14,7 @@ use App\Helpers\PointHelper;
 
 @section('content')
     <div class="content col-10">
-        <form action="{{route('address.store')}}" method="POST">
+        <form action="{{ route('address.store') }}" method="POST">
             @csrf
             <div class="form-item form-group">
                 <label for="address" class="form-label">Адрес</label>
@@ -45,9 +44,9 @@ use App\Helpers\PointHelper;
                     <tbody>
                     @foreach($addresses as $address)
                         <tr>
-                            <th scope="row">{{$address->id}}</th>
-                            <td>{{$address->address}}</td>
-                            <td>{{ $address->geometryToPoint($address->position) }}</td>
+                            <th scope="row">{{ $address->id }}</th>
+                            <td>{{ $address->address }}</td>
+                            <td>{{ $address->point }}</td>
                             <td>
                                 <form method="POST" action="{{route('address.delete', $address->id)}}"
                                       accept-charset="UTF-8">

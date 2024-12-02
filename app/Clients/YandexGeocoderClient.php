@@ -11,8 +11,9 @@ use App\Interfaces\YandexGeocoderClientInterface;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
-class YandexGeocoderClient implements YandexGeocoderClientInterface
+readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
 {
     /**
      * YandexGeocoder constructor.
@@ -24,36 +25,34 @@ class YandexGeocoderClient implements YandexGeocoderClientInterface
      * @param LoggerInterface $logger
      */
     public function __construct(
-        private readonly string $apikey,
-        private readonly string $format,
-        private readonly string $url,
-        private readonly Client $client,
-        private readonly LoggerInterface $logger,
+        private string $apikey,
+        private string $format,
+        private string $url,
+        private Client $client,
+        private LoggerInterface $logger = new NullLogger(),
     ) {}
 
     /**
      * @param string $geocode
      * @param array $params
+     * @param string $method
      *
      * @return array
      * @throws ClientException
      * @throws NetworkException
      */
-    public function sendRequest(string $geocode, array $params = []): array
+    public function sendRequest(string $geocode, array $params = [], string $method = 'GET'): array
     {
+        $options = [
+            'form_params' => $params,
+            'query' => [
+                'apikey' => $this->apikey,
+                'format' => $this->format,
+                'geocode' => $geocode,
+            ],
+        ];
         try {
-            $response = $this->client->request(
-                'GET',
-                $this->url,
-                [
-                    'form_params' => $params,
-                    'query' => [
-                        'apikey' => $this->apikey,
-                        'format' => $this->format,
-                        'geocode' => $geocode,
-                    ],
-                ],
-            )->getBody()->getContents();
+            $response = $this->client->request($method, $this->url, $options)->getBody()->getContents();
 
             return json_decode($response, true);
         } catch (ConnectException $exception) {
@@ -64,7 +63,7 @@ class YandexGeocoderClient implements YandexGeocoderClientInterface
             throw new ClientException(
                 'Что то пошло не так при отправке запроса: ' . $this->url,
                 0,
-                $exception
+                $exception,
             );
         }
     }
@@ -81,7 +80,7 @@ class YandexGeocoderClient implements YandexGeocoderClientInterface
         $position = null;
         $response = $this->sendRequest($address, ['results' => 1]);
         $results = $response['response']['GeoObjectCollection']['featureMember'];
-        if (!empty($results)) {
+        if ($results !== []) {
             $geoObject = $results[0]['GeoObject'];
             $position['address'] = $geoObject['metaDataProperty']['GeocoderMetaData']['Address']['formatted'];
             $position['position'] = $geoObject['Point']['pos'];

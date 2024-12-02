@@ -11,13 +11,13 @@ use App\Exceptions\NotFoundAddressException;
 use App\Interfaces\YandexGeocoderClientInterface;
 use App\Models\Address;
 
-class StoreAddressCase
+readonly class StoreAddressCase
 {
     /**
      * @param YandexGeocoderClient $client
      */
     public function __construct(
-        private readonly YandexGeocoderClientInterface $client,
+        private YandexGeocoderClientInterface $client,
     ) {}
 
     /**
