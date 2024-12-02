@@ -59,7 +59,7 @@ readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
             $this->logger->error($exception);
             throw new NetworkException($exception->getRequest(), 'Нет соединения с ' . $this->url, $exception);
         } catch (GuzzleException $exception) {
-            $this->logger->error($exception);
+            $this->logger->error('Request: ' . json_encode($options) . PHP_EOL . $exception);
             throw new ClientException(
                 'Что то пошло не так при отправке запроса: ' . $this->url,
                 0,
