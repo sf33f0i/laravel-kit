@@ -12,6 +12,7 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use JsonException;
 
 readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
 {
@@ -40,6 +41,7 @@ readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
      * @return array
      * @throws ClientException
      * @throws NetworkException
+     * @throws JsonException
      */
     public function sendRequest(string $geocode, array $params = [], string $method = 'GET'): array
     {
@@ -54,12 +56,12 @@ readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
         try {
             $response = $this->client->request($method, $this->url, $options)->getBody()->getContents();
 
-            return json_decode($response, true);
+            return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
         } catch (ConnectException $exception) {
             $this->logger->error($exception);
             throw new NetworkException($exception->getRequest(), 'Нет соединения с ' . $this->url, $exception);
         } catch (GuzzleException $exception) {
-            $this->logger->error('Request: ' . json_encode($options) . PHP_EOL . $exception);
+            $this->logger->error('Request: ' . json_encode($options, JSON_THROW_ON_ERROR) . PHP_EOL . $exception);
             throw new ClientException(
                 'Что то пошло не так при отправке запроса: ' . $this->url,
                 0,
@@ -74,6 +76,7 @@ readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
      * @return array|null
      * @throws ClientException
      * @throws NetworkException
+     * @throws JsonException
      */
     public function getAddressPosition(string $address): ?array
     {
