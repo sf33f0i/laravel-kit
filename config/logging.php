@@ -126,5 +126,11 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'yandex-geocoder' => [
+            'driver' => 'single',
+            'level' => 'debug',
+            'path' => storage_path('logs/yandex-geocoder.log'),
+        ],
     ],
 ];
