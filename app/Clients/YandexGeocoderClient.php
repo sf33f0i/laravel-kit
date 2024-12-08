@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Clients;
 
 use GuzzleHttp\Client;
-use App\Exceptions\ClientException;
-use App\Exceptions\NetworkException;
 use App\Interfaces\YandexGeocoderClientInterface;
-use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\ServerException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use JsonException;
@@ -39,11 +39,9 @@ readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
      * @param string $method
      *
      * @return array
-     * @throws ClientException
-     * @throws NetworkException
-     * @throws JsonException
+     * @throws JsonException|GuzzleException
      */
-    public function sendRequest(string $geocode, array $params = [], string $method = 'GET'): array
+    private function sendRequest(string $geocode, array $params = [], string $method = 'GET'): array
     {
         $options = [
             'form_params' => $params,
@@ -59,16 +57,11 @@ readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
             $this->logger->info('Response: ' . json_encode($response, JSON_THROW_ON_ERROR));
 
             return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-        } catch (ConnectException $exception) {
-            $this->logger->error($exception);
-            throw new NetworkException($exception->getRequest(), 'Нет соединения с ' . $this->url, $exception);
-        } catch (GuzzleException $exception) {
-            $this->logger->error($exception);
-            throw new ClientException(
-                'Что то пошло не так при отправке запроса: ' . $this->url,
-                0,
-                $exception,
-            );
+        } catch (ClientException|ServerException $exception) {
+            $response = json_encode($exception->getResponse()->getBody()->getContents(), JSON_THROW_ON_ERROR);
+            $this->logger->error($exception->getMessage() . PHP_EOL . 'Response: ' . $response);
+
+            throw new BadResponseException($exception->getMessage(), $exception->getRequest(), $exception->getResponse());
         }
     }
 
@@ -76,8 +69,7 @@ readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
      * @param string $address
      *
      * @return array|null
-     * @throws ClientException
-     * @throws NetworkException
+     * @throws GuzzleException
      * @throws JsonException
      */
     public function getAddressPosition(string $address): ?array
@@ -85,7 +77,7 @@ readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
         $position = null;
         $response = $this->sendRequest($address, ['results' => 1]);
         $results = $response['response']['GeoObjectCollection']['featureMember'];
-        if ($results !== []) {
+        if ($results) {
             $geoObject = $results[0]['GeoObject'];
             $position['address'] = $geoObject['metaDataProperty']['GeocoderMetaData']['Address']['formatted'];
             $position['position'] = $geoObject['Point']['pos'];

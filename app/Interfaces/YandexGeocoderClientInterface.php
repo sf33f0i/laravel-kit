@@ -6,5 +6,5 @@ namespace App\Interfaces;
 
 interface YandexGeocoderClientInterface
 {
-    public function sendRequest(string $geocode, array $params = []): array;
+    public function getAddressPosition(string $address): ?array;
 }

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\UseCases\Address;
 
 use App\Clients\YandexGeocoderClient;
-use App\Exceptions\ClientException;
-use App\Exceptions\NetworkException;
 use App\Exceptions\NotFoundAddressException;
 use App\Interfaces\YandexGeocoderClientInterface;
 use App\Models\Address;
+use GuzzleHttp\Exception\GuzzleException;
+use JsonException;
 
 readonly class StoreAddressCase
 {
@@ -23,15 +23,15 @@ readonly class StoreAddressCase
     /**
      * @param string $address
      *
-     * @throws ClientException
-     * @throws NetworkException
      * @throws NotFoundAddressException
+     * @throws GuzzleException
+     * @throws JsonException
      */
     public function handle(string $address): void
     {
         $addressPosition = $this->client->getAddressPosition($address);
         if ($addressPosition === null) {
-            throw new NotFoundAddressException('Координаты данного адреса не найдены!');
+            throw new NotFoundAddressException();
         }
 
         Address::query()->create([

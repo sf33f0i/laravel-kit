@@ -18,7 +18,7 @@ class StoreAddressRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'address' => 'адрес',
+            'address' => '"Адрес"',
         ];
     }
 }
