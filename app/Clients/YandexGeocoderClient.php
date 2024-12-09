@@ -41,7 +41,7 @@ readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
      * @return array
      * @throws JsonException|GuzzleException
      */
-    public function sendRequest(string $geocode, array $params = [], string $method = 'GET'): array
+    private function sendRequest(string $geocode, array $params = [], string $method = 'GET'): array
     {
         $options = [
             'form_params' => $params,
@@ -54,12 +54,21 @@ readonly class YandexGeocoderClient implements YandexGeocoderClientInterface
         $this->logger->info('Request: ' . json_encode($options, JSON_THROW_ON_ERROR));
         try {
             $response = $this->client->request($method, $this->url, $options)->getBody()->getContents();
-            $this->logger->info('Response: ' . json_encode($response, JSON_THROW_ON_ERROR));
+            $this->logger->info('Response: ' . $response);
         } catch (ClientException|ServerException $exception) {
-            $response = json_encode($exception->getResponse()->getBody()->getContents(), JSON_THROW_ON_ERROR);
+            $response = $exception->getResponse()->getBody()->getContents();
             $this->logger->error($exception->getMessage() . PHP_EOL . 'Response: ' . $response);
         }
 
         return (array)json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * @throws GuzzleException
+     * @throws JsonException
+     */
+    public function getGeoData(string $geocode, array $params = []): array
+    {
+        return $this->sendRequest($geocode, $params);
     }
 }

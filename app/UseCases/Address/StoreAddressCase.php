@@ -50,13 +50,8 @@ readonly class StoreAddressCase
     private function getAddressPosition(string $address): ?array
     {
         $position = null;
-        $response = $this->client->sendRequest($address, ['results' => 1]);
-
-        if(!array_key_exists('response', $response)) {
-            return null;
-        }
-
-        $results = $response['response']['GeoObjectCollection']['featureMember'];
+        $response = $this->client->getGeoData($address, ['results' => 1]);
+        $results = $response['response']['GeoObjectCollection']['featureMember'] ?? null;
         if ($results) {
             $geoObject = $results[0]['GeoObject'];
             $position['address'] = $geoObject['metaDataProperty']['GeocoderMetaData']['Address']['formatted'];

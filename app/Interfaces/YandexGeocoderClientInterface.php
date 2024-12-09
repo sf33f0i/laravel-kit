@@ -6,5 +6,5 @@ namespace App\Interfaces;
 
 interface YandexGeocoderClientInterface
 {
-    public function sendRequest(string $geocode, array $params = [], string $method = 'GET'): array;
+    public function getGeoData(string $geocode, array $params = []): array;
 }

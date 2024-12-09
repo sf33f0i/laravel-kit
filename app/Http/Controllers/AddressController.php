@@ -10,7 +10,6 @@ use App\Http\Requests\Address\StoreAddressRequest;
 use App\Models\Address;
 use App\UseCases\Address\StoreAddressCase;
 use App\UseCases\Address\DeleteAddressCase;
-use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
