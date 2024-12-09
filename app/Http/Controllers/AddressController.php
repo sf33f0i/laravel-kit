@@ -34,10 +34,8 @@ class AddressController extends Controller
             $requestData = $request->validated();
             $case->handle($requestData['address']);
             $message = ['success' => 'Адрес успешно добавлен!'];
-        } catch (BadResponseException) {
-            $message = ['danger' => 'Произошла ошибка при добавлении адреса!'];
         } catch (NotFoundAddressException) {
-            $message = ['danger' => 'Координаты данного адреса не найдены!'];
+            $message = ['danger' => 'Произошла ошибка при добавлении записи!'];
         }
 
         return redirect()->back()->withInput()->with($message);

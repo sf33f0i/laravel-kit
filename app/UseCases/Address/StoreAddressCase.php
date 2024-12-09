@@ -29,7 +29,7 @@ readonly class StoreAddressCase
      */
     public function handle(string $address): void
     {
-        $addressPosition = $this->client->getAddressPosition($address);
+        $addressPosition = $this->getAddressPosition($address);
         if ($addressPosition === null) {
             throw new NotFoundAddressException();
         }
@@ -38,5 +38,31 @@ readonly class StoreAddressCase
             'address' => $addressPosition['address'],
             'position' => "POINT($addressPosition[position])",
         ]);
+    }
+
+    /**
+     * @param string $address
+     *
+     * @return array|null
+     * @throws GuzzleException
+     * @throws JsonException
+     */
+    private function getAddressPosition(string $address): ?array
+    {
+        $position = null;
+        $response = $this->client->sendRequest($address, ['results' => 1]);
+
+        if(!array_key_exists('response', $response)) {
+            return null;
+        }
+
+        $results = $response['response']['GeoObjectCollection']['featureMember'];
+        if ($results) {
+            $geoObject = $results[0]['GeoObject'];
+            $position['address'] = $geoObject['metaDataProperty']['GeocoderMetaData']['Address']['formatted'];
+            $position['position'] = $geoObject['Point']['pos'];
+        }
+
+        return $position;
     }
 }
