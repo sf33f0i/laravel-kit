@@ -8,6 +8,23 @@
 ## Установка
 Копировать .env файл (обновить, если требуется)
 
+| Переменная               | Описание                                                   |
+|--------------------------|------------------------------------------------------------|
+| DOCKER_DOMAIN            | URL приложения                                             |
+| PROJECT_NAME             | Наименование проекта                                       |
+| APP_DEBUG                | Дебаг режим (true/false)                                   |
+| COMPOSE_FILE             | Используемый docker-compose файл                           |
+| DB_DATABASE              | Имя БД                                                     |
+| DB_USERNAME              | Пользователь БД                                            |
+| DB_PASSWORD              | Пароль от БД                                               |
+| RESTART                  | Политика перезапуска (no/on-failure/always/unless-stopped) |
+| DOCKER_DB_PORT           | Внешний порт базы данных                                   |
+| APP_ENV                  | Текущая среда приложения(development/testing/local/prod)   |
+| PHP_USER_ID              | ID пользователя от которого будет работать PHP             |
+| YANDEX_GEOCODER_API_KEY  | Ключ API для Yandex Geocoder                               |
+
+
+
 Установить приложение в Docker
 ```
 make install
